@@ -1,0 +1,18 @@
+# Build and release artifacts
+*.zip
+*.crx
+*.pem
+
+# Temporary files
+.tmp/
+*.log
+*.bak
+*.backup
+*.patch
+*.before-*
+*.broken-*
+
+# OS files
+Thumbs.db
+Desktop.ini
+.DS_Store

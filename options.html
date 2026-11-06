@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Redirect Manager</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="page-header">
+      <div>
+        <h1>Redirect Manager</h1>
+      </div>
+      <div class="header-actions">
+        <button id="new-rule-button" type="button" class="primary">+ New rule</button>
+        <input id="import-file" type="file" accept="application/json,.json" hidden>
+        <button id="import-button" type="button" class="secondary">Import</button>
+        <button id="export-button" type="button" class="secondary">Export</button>
+      </div>
+    </header>
+
+    <main class="page-grid">
+      <section class="panel rules-panel" aria-labelledby="rules-title">
+        <div class="panel-heading">
+          <div>
+            <h2 id="rules-title">Rules</h2>
+            <p>Drag cards to change priority ↑↓ </p>
+          </div>
+        </div>
+        <div id="empty-state" class="empty-state" hidden>No rules configured.</div>
+        <div id="rule-list" class="rule-list"></div>
+      </section>
+
+      <aside class="side-column">
+        <section class="panel tester-panel" aria-labelledby="tester-title">
+          <div class="panel-heading"><h2 id="tester-title">Test a URL</h2></div>
+          <div class="panel-body">
+            <div class="inline-form">
+              <input id="test-url" type="text" inputmode="url" autocomplete="off" spellcheck="false" placeholder="bing.com or https://www.bing.com/search?q=test">
+              <button id="test-button" type="button" class="primary">Evaluate</button>
+            </div>
+            <div id="test-result" class="test-result" aria-live="polite">Enter a URL to see the first matching rule.</div>
+          </div>
+        </section>
+
+        <section class="panel logs-panel" aria-labelledby="logs-title">
+          <div class="panel-heading split">
+            <div><h2 id="logs-title">Redirect Log</h2></div>
+            <button id="clear-logs-button" type="button" class="text-button">Clear</button>
+          </div>
+          <div id="log-list" class="log-list"></div>
+        </section>
+      </aside>
+    </main>
+  </div>
+
+  <div id="editor-backdrop" class="drawer-backdrop" hidden></div>
+  <aside id="editor-drawer" class="editor-drawer" aria-labelledby="editor-title" hidden>
+    <div class="drawer-header">
+      <div><h2 id="editor-title">Edit rule</h2><p>Configure one or many sources for one destination.</p></div>
+      <button id="close-editor-button" type="button" class="icon-button" aria-label="Close editor">×</button>
+    </div>
+
+    <div class="drawer-body">
+      <div id="editor-message" class="editor-message" hidden aria-live="polite"></div>
+
+      <label for="rule-name">Rule name</label>
+      <input id="rule-name" type="text" autocomplete="off">
+
+      <label class="check-row"><input id="rule-enabled" type="checkbox"> Rule enabled</label>
+
+      <fieldset>
+        <legend>Match type</legend>
+        <label class="radio-card"><input type="radio" name="match-type" value="host" checked><span><strong>Host match</strong><small>Match a domain or wildcard subdomain.</small></span></label>
+        <label class="radio-card"><input type="radio" name="match-type" value="exact"><span><strong>Exact URL</strong><small>Match a complete URL, optionally ignoring query or fragment.</small></span></label>
+      </fieldset>
+
+      <div class="field-heading">
+        <div><label id="source-heading" for="source-input">Source hosts</label><p id="source-hint">Enter hosts such as bing.com or *.bing.com.</p></div>
+      </div>
+      <div id="source-list" class="source-list"></div>
+      <div class="inline-form">
+        <input id="source-input" type="text" placeholder="*.example.com">
+        <button id="add-source-button" type="button" class="secondary">Add</button>
+      </div>
+
+      <details class="bulk-section">
+        <summary>Bulk add sources</summary>
+		<div class="bulk-grid">
+          <label for="bulk-sources">One source per line</label>
+          <textarea id="bulk-sources" rows="5" placeholder="msn.com&#10;*.msn.com"></textarea>
+          <button id="add-bulk-sources-button" type="button" class="secondary">Add sources</button>
+		</div>
+      </details>
+
+      <label for="destination">Destination URL</label>
+      <input id="destination" type="url" placeholder="https://example.com/">
+
+      <details class="advanced-section">
+        <summary>Advanced options</summary>
+        <div class="advanced-grid">
+          <label for="redirect-method">Redirect method</label>
+          <select id="redirect-method">
+            <option value="replace">Replace current tab</option>
+            <option value="newTab">Open new tab and close original</option>
+          </select>
+          <label class="check-row"><input id="top-level-only" type="checkbox" checked> Top-level navigation only</label>
+          <label class="check-row"><input id="ignore-query-string" type="checkbox"> Ignore query string for exact URLs</label>
+          <label class="check-row"><input id="ignore-fragment" type="checkbox" checked> Ignore fragment for exact URLs</label>
+          <label class="check-row"><input id="logging-enabled" type="checkbox"> Enable redirect logging</label>
+        </div>
+      </details>
+    </div>
+
+    <div class="drawer-footer">
+      <button id="cancel-button" type="button" class="secondary">Cancel</button>
+      <button id="save-button" type="button" class="primary">Save rule</button>
+    </div>
+  </aside>
+
+  <script src="storage.js"></script>
+  <script src="matcher.js"></script>
+  <script src="validator.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>
